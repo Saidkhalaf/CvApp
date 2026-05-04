@@ -1,0 +1,57 @@
+@using cvapp.BL.Domain.enums
+@model CVAPP.UI.Web.MVC.Models.Training.EditTrainingViewModel
+@{ Layout = null; }
+
+<form asp-controller="Training" asp-action="AutoSaveEdit" method="post" class="js-cv-create-form">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="PersonId" type="hidden" />
+    <input asp-for="InstituteOrSchoolId" type="hidden" />
+    <input asp-for="ExamId" type="hidden" />
+    
+    @* 1. Basic Training Info *@
+    <div class="p-4 bg-body-secondary rounded-4 border border-primary-subtle shadow-sm mb-4">
+        <div class="row g-3">
+            <div class="col-md-8">
+                <label asp-for="Name" class="form-label fw-semibold text-body">Naam cursus/training</label>
+                <input asp-for="Name" class="form-control bg-body border-secondary-subtle text-body" autocomplete="off"/>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Year" class="form-label fw-semibold text-body">Jaar</label>
+                <input asp-for="Year" type="number" class="form-control bg-body border-secondary-subtle text-body" autocomplete="off"/>
+            </div>
+            <div class="col-12">
+                <label asp-for="CourseType" class="form-label fw-bold text-body">Type cursus</label>
+                <select asp-for="CourseType" class="form-select bg-body border-primary-subtle text-body" asp-items="Html.GetEnumSelectList<CourseType>()"></select>
+            </div>
+        </div>
+    </div>
+
+    @* 2. Institute Information *@
+    <div class="mb-4">
+        <h6 class="fw-bold mb-3 text-success"><i class="bi bi-building me-2"></i>Instituut / School</h6>
+        <div class="p-4 bg-body-secondary rounded-4 border shadow-sm">
+            @{ 
+                ViewData.TemplateInfo.HtmlFieldPrefix = "InstituteOrSchool";
+                await Html.RenderPartialAsync("~/Views/Training/_InstituteFields.cshtml", Model.InstituteOrSchool);
+                ViewData.TemplateInfo.HtmlFieldPrefix = ""; 
+            }
+        </div>
+    </div>
+
+    @* 3. Exam Information *@
+    <div>
+        <h6 class="fw-bold mb-3 text-info"><i class="bi bi-patch-check me-2"></i>Examen Resultaat</h6>
+        <div class="p-4 bg-body-secondary rounded-4 border shadow-sm">
+            @{ 
+                ViewData.TemplateInfo.HtmlFieldPrefix = "Exam";
+                await Html.RenderPartialAsync("~/Views/Training/_ExamFields.cshtml", Model.Exam);
+                ViewData.TemplateInfo.HtmlFieldPrefix = ""; 
+            }
+        </div>
+    </div>
+
+    <div class="mt-3 text-end">
+        <small class="text-secondary fst-italic"><i class="bi bi-cloud-arrow-up me-1"></i> Wijzigingen worden live opgeslagen</small>
+    </div>
+</form>

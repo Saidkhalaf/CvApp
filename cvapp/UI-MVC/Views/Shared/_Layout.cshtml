@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html lang="nl" data-bs-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ACEN HR Applicatie</title>
+    <link rel="stylesheet" href="~/dist/main.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+    <script src="~/dist/main.entry.js" type="module" asp-append-version="true"></script>
+</head>
+<body>
+<input type="checkbox" id="sidebarToggle" class="sidebar-toggle-input" aria-hidden="true"/>
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var isDashboardPage = string.Equals(currentController, "Home", StringComparison.OrdinalIgnoreCase) &&
+                          string.Equals(currentAction, "Index", StringComparison.OrdinalIgnoreCase);
+    var isTemplatesPage = string.Equals(currentController, "Home", StringComparison.OrdinalIgnoreCase) &&
+                          string.Equals(currentAction, "Templates", StringComparison.OrdinalIgnoreCase);
+    var cvSections = new[]
+    {
+        new { Route = "persoon-gegevens", Label = "Persoon gegevens", Step = 1 },
+        new { Route = "overzicht-skills", Label = "Overzicht skills", Step = 2 },
+        new { Route = "extra-expertises", Label = "Extra expertises", Step = 3 },
+        new { Route = "extra-technologieen", Label = "Extra technologieën", Step = 4 },
+        new { Route = "carriers", Label = "Carrière", Step = 5 },
+        new { Route = "certificaten", Label = "Certificaten", Step = 6 },
+        new { Route = "cursussen-trainingen", Label = "Cursussen/Trainingen", Step = 7 },
+        new { Route = "opleidingen", Label = "Opleidingen", Step = 8 },
+        new { Route = "projecten", Label = "Projecten", Step = 9 },
+        new { Route = "talen", Label = "Talen", Step = 10 }
+    };
+    var isCvPage = string.Equals(currentController, "Cv", StringComparison.OrdinalIgnoreCase) &&
+                   string.Equals(currentAction, "Create", StringComparison.OrdinalIgnoreCase);
+    var isCvMenuOpen = isCvPage;
+    var cvCreateUrl = Url.Action("Create", "Cv") ?? "/Cv/Create";
+}
+<div class="wrapper">
+
+    <div class="sidebar-backdrop" aria-hidden="true"></div>
+
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h5 class="mb-0"><i class="bi bi-building"></i> ACEN CvApp</h5>
+        </div>
+        <ul class="list-unstyled components">
+            <li>
+                <a asp-controller="Home" asp-action="Index" class="@(isDashboardPage ? "active" : "")">
+                    <i class="bi bi-house-door"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="#cvSubmenu" data-bs-toggle="collapse" aria-expanded="@isCvMenuOpen.ToString().ToLowerInvariant()" class="cv-submenu-toggle text-decoration-none d-flex align-items-center justify-content-between @(isCvMenuOpen ? "active" : "")">
+                    <span class="d-flex align-items-center">
+                        <i class="bi bi-file-earmark-person"></i>
+                        <span class="fw-semibold">Maak je CV</span>
+                    </span>
+                    <i class="bi bi-chevron-down small transition-transform"></i>
+                </a>
+                <ul class="collapse list-unstyled ps-3 @(isCvMenuOpen ? "show" : "")" id="cvSubmenu">
+                    @foreach (var cvSection in cvSections)
+                    {
+                        <li class="mb-2">
+                            <a href="@(isCvPage ? $"#{cvSection.Route}" : $"{cvCreateUrl}#{cvSection.Route}")"
+                               class="cv-step-link d-flex align-items-center text-decoration-none text-light p-2 rounded-3 hover-bg-primary">
+                                <span class="cv-step-badge badge bg-white text-primary rounded-circle d-flex align-items-center justify-content-center me-3">@cvSection.Step</span>
+                                <span class="small fw-medium">@cvSection.Label</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+            <li>
+                <a asp-controller="Home" asp-action="Index" class="@(isTemplatesPage ? "active" : "")">
+                    <i class="bi bi-collection-fill"></i> Templates
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Branding" asp-action="Index">
+                    <i class="bi bi-palette"></i> Branding
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Settings" asp-action="Index">
+                    <i class="bi bi-gear"></i> Instellingen
+                </a>
+            </li>
+            <li>
+                <a asp-controller="CvExport" asp-action="Index">
+                    <i class="bi bi-box-arrow-right"></i> Exporteer jouw cv
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+
+    <div id="content">
+        <nav class="navbar navbar-expand-lg bg-body border-bottom shadow-sm sticky-top">
+            <div class="container-fluid">
+                <label for="sidebarToggle" id="sidebarCollapse" class="btn btn-outline-secondary" role="button" aria-label="Toggle sidebar">
+                    <span class="visually-hidden">Toggle sidebar</span>
+                </label>
+                <span class="navbar-text ms-3">
+                    <i class="bi bi-person-circle me-2"></i>
+                    <span class="d-none d-sm-inline">Welkom</span>
+                </span>
+                <button type="button"
+                        class="btn btn-outline-secondary ms-auto theme-toggle"
+                        data-theme-toggle
+                        aria-label="Wissel tussen licht en donker thema"
+                        aria-pressed="false">
+                    <i class="bi bi-moon-stars me-2" data-theme-icon aria-hidden="true"></i>
+                    <span data-theme-label>Donker</span>
+                </button>
+            </div>
+        </nav>
+
+        <main role="main" class="pb-3">
+            @if (!isCvPage)
+            {
+                <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div id="successToast"
+                             class="toast align-items-center text-bg-success border-0 shadow"
+                             role="alert"
+                             aria-live="assertive"
+                             aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    @TempData["SuccessMessage"]
+                                </div>
+                                <button type="button"
+                                        class="btn-close btn-close-white me-2 m-auto"
+                                        data-bs-dismiss="toast"
+                                        aria-label="Close"></button>
+                            </div>
+                        </div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div id="errorToast"
+                             class="toast align-items-center text-bg-danger border-0 shadow"
+                             role="alert"
+                             aria-live="assertive"
+                             aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    @TempData["ErrorMessage"]
+                                </div>
+                                <button type="button"
+                                        class="btn-close btn-close-white me-2 m-auto"
+                                        data-bs-dismiss="toast"
+                                        aria-label="Close"></button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            @RenderBody()
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-top footer text-muted bg-body py-3 mt-auto">
+            <div class="container text-center">
+                <small class="d-block mb-1 text-muted">
+                    <i class="bi bi-shield-check text-success me-1"></i>
+                    Veilig • GDPR-compliant • Ontwikkeld voor ACEN 
+                </small>
+                <small>&copy; 2026 ACEN - HR CvApplicatie - <a asp-controller="Home" asp-action="Privacy">Privacy</a></small>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,80 @@
+.sidebar-toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+#sidebarCollapse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 38px;
+  border: 1px solid var(--cvapp-control-border);
+  border-radius: 999px;
+  background: var(--cvapp-control-bg);
+  color: var(--cvapp-control-fg);
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 1px 2px var(--cvapp-control-shadow);
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+#sidebarCollapse::before {
+  content: "<<";
+  font-weight: 700;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.9rem;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+
+#sidebarCollapse:hover {
+  background: var(--cvapp-control-hover-bg);
+  box-shadow: 0 4px 12px var(--cvapp-control-shadow-hover);
+  transform: translateY(-1px);
+}
+
+#sidebarCollapse:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px var(--cvapp-control-shadow-active);
+}
+
+#sidebarCollapse:focus-visible {
+  outline: 3px solid var(--cvapp-control-focus);
+  outline-offset: 2px;
+}
+
+#sidebarToggle:checked ~ .wrapper #sidebarCollapse::before {
+  content: ">>";
+}
+
+#sidebarToggle:checked ~ .wrapper #sidebarCollapse {
+  color: var(--cvapp-control-fg-checked);
+  border-color: var(--cvapp-control-border-checked);
+}
+
+@media (max-width: 768px) {
+  #sidebarCollapse {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1060;
+  }
+
+  #sidebarCollapse::before {
+    content: ">>";
+  }
+
+  #sidebarToggle:checked ~ .wrapper #sidebarCollapse {
+    left: 262px;
+  }
+
+  #sidebarToggle:checked ~ .wrapper #sidebarCollapse::before {
+    content: "<<";
+  }
+}

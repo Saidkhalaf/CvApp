@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>disable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>CVAPP.UI.Web.MVC   </RootNamespace>
+        <AssemblyName>CVAPP.UI.Web.MVC</AssemblyName>
+        <UseAppHost>true</UseAppHost>
+        <ClientAppDir>$(MSBuildProjectDirectory)\ClientApp\</ClientAppDir>
+        <RunClientBuild Condition="'$(RunClientBuild)' == ''">true</RunClientBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\BL\BL.csproj" />
+        <ProjectReference Include="..\DAL\DAL.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Institute\Create.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\uploads\diplomas\2aa94a84-2c1f-42fa-b34b-bdc0d7be93e1_Stage rapport week 1.docx.pdf" />
+      <_ContentIncludedByDefault Remove="wwwroot\uploads\diplomas\37592422-e7c2-447e-b5ce-59d114a8a45e_NDA Stagiair Baldeep.pdf" />
+      <_ContentIncludedByDefault Remove="wwwroot\uploads\diplomas\6d0e71b3-75ec-452b-9d56-7ffbc149dd3e_Projectbeschrijving CvApp.pdf" />
+      <_ContentIncludedByDefault Remove="wwwroot\uploads\diplomas\e2a9c48d-77ef-4c44-be4c-9ad95c446012_CV-Baldeep Gurung (2).pdf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\uploads\diplomas\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="QuestPDF" Version="2026.2.4" />
+    </ItemGroup>
+
+    <Target Name="EnsureNpm" BeforeTargets="Build"
+            Condition="'$(RunClientBuild)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+        <Exec Command="npm --version" WorkingDirectory="$(ClientAppDir)" />
+    </Target>
+
+    <Target Name="ClientNpmInstall" BeforeTargets="Build" DependsOnTargets="EnsureNpm"
+            Condition="'$(RunClientBuild)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+        <!-- Install dependencies only when node_modules is missing to avoid Windows file-lock issues during dotnet run. -->
+        <Exec Command="npm ci" WorkingDirectory="$(ClientAppDir)"
+              Condition="Exists('$(ClientAppDir)package-lock.json') and !Exists('$(ClientAppDir)node_modules')" />
+        <Exec Command="npm install" WorkingDirectory="$(ClientAppDir)"
+              Condition="!Exists('$(ClientAppDir)package-lock.json') and !Exists('$(ClientAppDir)node_modules')" />
+        <Exec Command="npm install" WorkingDirectory="$(ClientAppDir)"
+              Condition="Exists('$(ClientAppDir)node_modules') and !Exists('$(ClientAppDir)node_modules\vite')" />
+    </Target>
+
+    <Target Name="ClientNpmBuild" BeforeTargets="Build" DependsOnTargets="ClientNpmInstall"
+            Condition="'$(RunClientBuild)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+        <Exec Command="npm run build" WorkingDirectory="$(ClientAppDir)" />
+    </Target>
+
+
+</Project>

@@ -1,0 +1,59 @@
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 120px;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--cvapp-text-secondary);
+  background: var(--cvapp-control-bg);
+  border: 1px solid var(--cvapp-control-border);
+  border-radius: var(--cvapp-radius);
+  cursor: pointer;
+  transition: all var(--cvapp-transition-fast);
+  box-shadow: var(--cvapp-control-shadow);
+
+  &:hover {
+    background: var(--cvapp-control-hover-bg);
+    color: var(--cvapp-text-primary);
+    border-color: var(--cvapp-control-border-focus);
+    box-shadow: var(--cvapp-control-shadow-focus);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: var(--cvapp-control-shadow);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--cvapp-control-shadow-focus);
+  }
+
+  [data-theme-icon] {
+    width: 1rem;
+    height: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--cvapp-transition-normal);
+  }
+
+  &[aria-pressed="true"] [data-theme-icon] {
+    transform: rotate(180deg);
+  }
+
+  [data-theme-label] {
+    transition: color var(--cvapp-transition-fast);
+  }
+}
+
+// Dark theme adjustments
+[data-bs-theme="dark"] .theme-toggle {
+  &:hover {
+    background: var(--cvapp-control-hover-bg);
+    border-color: var(--cvapp-control-border-focus);
+  }
+}

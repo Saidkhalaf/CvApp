@@ -1,0 +1,117 @@
+@using System.Text.Json
+@model CVAPP.UI.Web.MVC.Models.CreateCvCertificateViewmodel
+
+@{
+    var nestedReturnUrl = Url.Action("Create", "CvCertificate", new
+    {
+        returnUrl = Model.ReturnUrl,
+        embedded = Model.IsEmbedded,
+        selectedCertificateId = Model.CertificateId,
+        selectedInstituteId = Model.InstituteOrSchoolId
+    }) ?? string.Empty;
+
+    ViewData["Title"] = "Nieuw certificaat";
+    Layout = Model.IsEmbedded ? "_EmbeddedLayout" : "_Layout";
+
+    var cancelUrl = string.IsNullOrWhiteSpace(Model.ReturnUrl)
+        ? Url.Action("Create", "Cv", new { section = "certificaten" })
+        : Model.ReturnUrl;
+}
+
+<div class="container py-4">
+    <div class="card border-0 shadow rounded-4 overflow-hidden">
+        <div class="card-header bg-white border-bottom px-4 py-3 d-flex align-items-center gap-2">
+            <i class="bi bi-award text-primary"></i>
+            <span class="fw-semibold">Certificaatgegevens</span>
+        </div>
+
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post" enctype="multipart/form-data" class="js-cv-create-form">
+                @Html.AntiForgeryToken()
+
+                <input asp-for="ReturnUrl" type="hidden" />
+                <input asp-for="IsEmbedded" type="hidden" />
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label asp-for="Year" class="form-label fw-medium">Jaar</label>
+                        <input asp-for="Year" class="form-control" placeholder="bijv. 2024" />
+                        <span asp-validation-for="Year" class="d-block text-danger small mt-1"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="CertificateCode" class="form-label fw-medium">Certificaatcode</label>
+                        <input asp-for="CertificateCode" class="form-control" />
+                        <span asp-validation-for="CertificateCode" class="d-block text-danger small mt-1"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="ExpiresOn" class="form-label fw-medium">Vervalt op</label>
+                        <input asp-for="ExpiresOn" type="date" class="form-control" placeholder="2026-12-31" />
+                        <span asp-validation-for="ExpiresOn" class="d-block text-danger small mt-1"></span>
+                    </div>
+                </div>
+
+                <partial name="~/Views/CvEducation/_LookupCard.cshtml"
+                         model='new CVAPP.UI.Web.MVC.Models.CvEducationLookupCardViewModel
+                         {
+                             FieldName = nameof(Model.CertificateId),
+                             Label = "Certificaat",
+                             Kind = "certificate",
+                             BadgeText = "LOOKUP",
+                             Placeholder = "Kies een certificaat",
+                             SelectedName = Model.SelectedCertificateName,
+                             HelperText = "Koppel dit CV-item aan een bestaand certificaat of registreer een nieuw certificaat.",
+                             CreateController = "Certificate",
+                             CreateReturnUrl = nestedReturnUrl,
+                             IsEmbedded = Model.IsEmbedded,
+                             CreateTitle = "Nieuw certificaat toevoegen",
+                             Value = Model.CertificateId
+                         }' />
+
+                <partial name="~/Views/CvEducation/_LookupCard.cshtml"
+                         model='new CVAPP.UI.Web.MVC.Models.CvEducationLookupCardViewModel
+                         {
+                             FieldName = nameof(Model.InstituteOrSchoolId),
+                             Label = "Instituut / School",
+                             Kind = "institute",
+                             BadgeText = "LOOKUP",
+                             Placeholder = "Kies een instituut of school",
+                             SelectedName = Model.SelectedInstituteOrSchoolName,
+                             HelperText = "Koppel dit CV-item aan een bestaand instituut of registreer een nieuwe school.",
+                             CreateController = "Institute",
+                             CreateReturnUrl = nestedReturnUrl,
+                             IsEmbedded = Model.IsEmbedded,
+                             CreateTitle = "Nieuw instituut toevoegen",
+                             Value = Model.InstituteOrSchoolId
+                         }' />
+
+                <div class="mb-4">
+                    <label asp-for="UploadedCertificate" class="form-label fw-medium">Certificaatbestand</label>
+                    <input asp-for="UploadedCertificate" type="file" class="form-control" />
+                    <span asp-validation-for="UploadedCertificate" class="d-block text-danger small mt-1"></span>
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row gap-3 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary btn-lg flex-grow-1 d-flex align-items-center justify-content-center gap-2 fw-semibold rounded-pill">
+                        <i class="bi bi-check2-circle"></i> Toevoegen
+                    </button>
+
+                    <a href="@cancelUrl"
+                       class="btn btn-outline-secondary btn-lg flex-grow-1 d-flex align-items-center justify-content-center gap-2 fw-semibold rounded-pill js-embedded-cancel">
+                        <i class="bi bi-x-lg"></i> Annuleren
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="application/json" data-lookup-source="certificate">@Html.Raw(JsonSerializer.Serialize(Model.CertificateLookupRows))</script>
+<script type="application/json" data-lookup-source="institute">@Html.Raw(JsonSerializer.Serialize(Model.InstituteLookupRows))</script>
+<partial name="~/Views/CvEducation/_LookupBrowserModal.cshtml" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

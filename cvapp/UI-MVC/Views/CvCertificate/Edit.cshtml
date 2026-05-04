@@ -1,0 +1,105 @@
+@model CVAPP.UI.Web.MVC.Models.EditCvCertificateViewModel
+
+@{
+    ViewData["Title"] = "Certificaat bewerken";
+    Layout = Model.IsEmbedded ? "_EmbeddedLayout" : "_Layout";
+
+    var cancelUrl = string.IsNullOrWhiteSpace(Model.ReturnUrl)
+        ? Url.Action("Create", "Cv", new { section = "certificaten" })
+        : Model.ReturnUrl;
+}
+
+<div class="container py-4">
+    <div class="card border-0 shadow rounded-4 overflow-hidden">
+        <div class="card-header bg-white border-bottom px-4 py-3 d-flex align-items-center gap-2">
+            <i class="bi bi-award text-primary"></i>
+            <span class="fw-semibold">Certificaat bewerken</span>
+        </div>
+
+        <div class="card-body p-4">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <input asp-for="Id" type="hidden" />
+                <input asp-for="ReturnUrl" type="hidden" />
+                <input asp-for="IsEmbedded" type="hidden" />
+                <input asp-for="ExistingCertificate" type="hidden" />
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label asp-for="Year" class="form-label fw-medium">Jaar</label>
+                        <input asp-for="Year" class="form-control" />
+                        <span asp-validation-for="Year" class="d-block text-danger small mt-1"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="CertificateCode" class="form-label fw-medium">Certificaatcode</label>
+                        <input asp-for="CertificateCode" class="form-control" />
+                        <span asp-validation-for="CertificateCode" class="d-block text-danger small mt-1"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="ExpiresOn" class="form-label fw-medium">Vervalt op</label>
+                        <input asp-for="ExpiresOn" type="date" class="form-control" />
+                        <span asp-validation-for="ExpiresOn" class="d-block text-danger small mt-1"></span>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="CertificateId" class="form-label fw-medium">Certificaat</label>
+                        <select asp-for="CertificateId" class="form-select">
+                            <option value="">-- Selecteer certificaat --</option>
+                            @foreach (var certificate in Model.CertificateLookupRows)
+                            {
+                                <option value="@certificate.Id">@certificate.Name (@certificate.Type)</option>
+                            }
+                        </select>
+                        <span asp-validation-for="CertificateId" class="d-block text-danger small mt-1"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="InstituteOrSchoolId" class="form-label fw-medium">Instituut / School</label>
+                        <select asp-for="InstituteOrSchoolId" class="form-select">
+                            <option value="">-- Selecteer instituut --</option>
+                            @foreach (var institute in Model.InstituteLookupRows)
+                            {
+                                <option value="@institute.Id">@institute.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="InstituteOrSchoolId" class="d-block text-danger small mt-1"></span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="UploadedCertificate" class="form-label fw-medium">Certificaatbestand</label>
+                    <input asp-for="UploadedCertificate" type="file" class="form-control" />
+
+                    @if (!string.IsNullOrWhiteSpace(Model.ExistingCertificate))
+                    {
+                        <div class="form-text">Huidig certificaat: @Model.ExistingCertificate</div>
+                    }
+
+                    <span asp-validation-for="UploadedCertificate" class="d-block text-danger small mt-1"></span>
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row gap-3 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary btn-lg flex-grow-1 d-flex align-items-center justify-content-center gap-2 fw-semibold rounded-pill">
+                        <i class="bi bi-check2-circle"></i> Wijzigingen opslaan
+                    </button>
+
+                    <a href="@cancelUrl"
+                       class="btn btn-outline-secondary btn-lg flex-grow-1 d-flex align-items-center justify-content-center gap-2 fw-semibold rounded-pill js-embedded-cancel">
+                        <i class="bi bi-x-lg"></i> Annuleren
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

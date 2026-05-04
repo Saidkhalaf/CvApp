@@ -1,0 +1,47 @@
+@model CVAPP.UI.Web.MVC.Models.CvEducationLookupCardViewModel
+
+<div class="mb-4">
+    <label for="@Model.FieldName" class="form-label fw-medium">@Model.Label</label>
+
+    <div class="cv-lookup-card" data-lookup-field data-lookup-kind="@Model.Kind">
+        <input id="@Model.FieldName"
+               name="@Model.FieldName"
+               type="hidden"
+               value="@Model.Value"
+               data-lookup-value />
+
+        <div class="cv-lookup-card__badge">@Model.BadgeText</div>
+
+        <div class="cv-lookup-card__body">
+            <div class="cv-lookup-card__content">
+                <div class="cv-lookup-card__value @(string.IsNullOrWhiteSpace(Model.SelectedName) ? "is-empty" : string.Empty)"
+                     data-lookup-display
+                     data-lookup-placeholder="@Model.Placeholder">
+                    @(string.IsNullOrWhiteSpace(Model.SelectedName) ? Model.Placeholder : Model.SelectedName)
+                </div>
+            </div>
+
+            <div class="cv-lookup-card__actions">
+                <button type="button"
+                        class="btn cv-lookup-card__action"
+                        data-lookup-open
+                        data-bs-toggle="modal"
+                        data-bs-target="#cvLookupBrowserModal">
+                    <i class="bi bi-search"></i> Kies
+                </button>
+
+                <a asp-controller="@Model.CreateController"
+                   asp-action="@Model.CreateAction"
+                   asp-route-returnUrl="@Model.CreateReturnUrl"
+                   asp-route-embedded="@Model.IsEmbedded"
+                   class="btn cv-lookup-card__action js-cv-leave-link"
+                   title="@Model.CreateTitle">
+                    <i class="bi bi-plus-lg"></i> Nieuw
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-text text-muted mt-2">@Model.HelperText</div>
+    @Html.ValidationMessage(Model.FieldName, null, new { @class = "d-block text-danger small mt-1" })
+</div>

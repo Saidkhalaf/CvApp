@@ -1,0 +1,103 @@
+.language-index {
+  // Table enhancements
+  .table {
+    --bs-table-bg: var(--cvapp-card-bg);
+    --bs-table-color: var(--cvapp-text-primary);
+    --bs-table-border-color: var(--cvapp-card-border);
+
+    thead {
+      background: var(--cvapp-table-header-bg);
+
+      th {
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--cvapp-text-muted);
+        border-bottom: 2px solid var(--cvapp-table-header-border);
+        padding: 1rem 1.5rem;
+      }
+    }
+
+    tbody {
+      tr {
+        transition: all var(--cvapp-transition-fast);
+        border-bottom: 1px solid var(--cvapp-card-border);
+
+        &:hover {
+          background-color: var(--cvapp-table-row-hover) !important;
+          transform: translateX(4px);
+
+          .btn-group .btn {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        td {
+          padding: 1rem 1.5rem;
+          vertical-align: middle;
+          color: var(--cvapp-text-secondary);
+
+          &:first-child {
+            font-family: monospace;
+            font-size: 0.8125rem;
+            color: var(--cvapp-text-muted);
+          }
+        }
+      }
+    }
+  }
+
+  // Badges in table
+  .badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    border-radius: var(--cvapp-radius-sm);
+
+    &.bg-primary {
+      background: var(--cvapp-badge-primary-bg) !important;
+      color: var(--cvapp-badge-primary-text) !important;
+    }
+
+    &.bg-info {
+      background: var(--cvapp-alert-info-bg) !important;
+      color: var(--cvapp-alert-info-text) !important;
+      border: 1px solid var(--cvapp-alert-info-border);
+    }
+  }
+
+  // Action buttons
+  .btn-group .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    opacity: 0;
+    transform: translateY(2px);
+    transition: all var(--cvapp-transition-fast);
+
+    i {
+      font-size: 0.875rem;
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--cvapp-shadow);
+    }
+  }
+
+  tr:hover .btn-group .btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  // Empty state
+  .table tbody tr td[colspan] {
+    padding: 3rem 1.5rem;
+    text-align: center;
+
+    i {
+      color: var(--cvapp-text-muted);
+      opacity: 0.5;
+    }
+  }
+}

@@ -1,0 +1,201 @@
+@model CVAPP.UI.Web.MVC.Models.Export.CvExportViewModel
+
+@{
+    ViewData["Title"] = "Export CV";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-11">
+
+            <!-- Page header -->
+            <div class="mb-4">
+                <h1 class="fw-bold mb-1">Export CV</h1>
+                <p class="text-muted mb-0">
+                    Kies een template, upload eventueel een logo en bepaal welke onderdelen je wilt exporteren.
+                </p>
+            </div>
+
+            <form method="post"
+                  enctype="multipart/form-data"
+                  id="cvExportForm"
+                  data-preview-url="@Url.Action("Preview", "CvExport")">        
+                <div class="row g-4">
+
+                    <!-- Left column: export settings -->
+                    <div class="col-lg-5">
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <h5 class="fw-semibold mb-1">
+                                    <i class="bi bi-sliders me-2 text-primary"></i>
+                                    Export instellingen
+                                </h5>
+                                <p class="text-muted small mb-0">
+                                    Configureer hoe je CV gegenereerd moet worden.
+                                </p>
+                            </div>
+
+                            <div class="card-body p-4">
+
+                                <!-- Template selection -->
+                                <div class="mb-4">
+                                    <label asp-for="TemplateName" class="form-label fw-semibold">
+                                        Template
+                                    </label>
+
+                                    <select asp-for="TemplateName" class="form-select form-select-lg">
+                                        @foreach (var template in Model.AvailableTemplates)
+                                        {
+                                            <option value="@template">@template</option>
+                                        }
+                                    </select>
+
+                                    <div class="form-text">
+                                        Selecteer de gewenste stijl voor je CV.
+                                    </div>
+                                </div>
+
+                                <!-- Logo upload -->
+                                <div class="mb-4">
+                                    <label asp-for="LogoFile" class="form-label fw-semibold">
+                                        Logo uploaden
+                                    </label>
+
+                                    <input asp-for="LogoFile"
+                                           type="file"
+                                           accept="image/png,image/jpeg"
+                                           class="form-control form-control-lg" />
+
+                                    <span asp-validation-for="LogoFile" class="text-danger small"></span>
+
+                                    <div class="form-text">
+                                        Toegestane bestanden: PNG of JPEG.
+                                    </div>
+                                </div>
+
+                                <!-- Sections -->
+                                <div class="mb-4">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h6 class="fw-semibold mb-0">
+                                            CV onderdelen
+                                        </h6>
+                                        <span class="badge text-bg-light border">
+                                            Selecteer onderdelen
+                                        </span>
+                                    </div>
+
+                                    <div class="vstack gap-2">
+
+                                        <div class="form-check border rounded-3 p-3 ps-5 bg-light-subtle">
+                                            <input asp-for="IncludeLanguages" class="form-check-input" />
+                                            <label asp-for="IncludeLanguages" class="form-check-label fw-medium">
+                                                Languages
+                                            </label>
+                                            <div class="text-muted small">
+                                                Voeg talen en taalniveaus toe aan de export.
+                                            </div>
+                                        </div>
+
+                                        <div class="form-check border rounded-3 p-3 ps-5 bg-light-subtle">
+                                            <input asp-for="IncludeEducations" class="form-check-input" />
+                                            <label asp-for="IncludeEducations" class="form-check-label fw-medium">
+                                                Education
+                                            </label>
+                                            <div class="text-muted small">
+                                                Voeg opleidingen en scholen toe aan de export.
+                                            </div>
+                                        </div>
+
+                                        <div class="form-check border rounded-3 p-3 ps-5 bg-light-subtle">
+                                            <input asp-for="IncludeCertificates" class="form-check-input" />
+                                            <label asp-for="IncludeCertificates" class="form-check-label fw-medium">
+                                                Certificates
+                                            </label>
+                                            <div class="text-muted small">
+                                                Voeg behaalde certificaten toe aan de export.
+                                            </div>
+                                        </div>
+
+                                        <div class="form-check border rounded-3 p-3 ps-5 bg-light-subtle">
+                                            <input asp-for="IncludeTrainings" class="form-check-input" />
+                                            <label asp-for="IncludeTrainings" class="form-check-label fw-medium">
+                                                Trainings
+                                            </label>
+                                            <div class="text-muted small">
+                                                Voeg gevolgde trainingen en cursussen toe.
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="d-grid gap-2">
+
+                                    <button type="submit"
+                                            formaction="@Url.Action("ExportToPdf", "CvExport")"
+                                            class="btn btn-primary btn-lg">
+                                        <i class="bi bi-file-earmark-pdf me-2"></i>
+                                        Exporteren naar PDF
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right column: preview -->
+                    <div class="col-lg-7">
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-header bg-white border-0 pt-4 px-4">
+                                <div class="d-flex justify-content-between align-items-start gap-3">
+                                    <div>
+                                        <h5 class="fw-semibold mb-1">
+                                            <i class="bi bi-file-earmark-text me-2 text-primary"></i>
+                                            PDF preview
+                                        </h5>
+                                        <p class="text-muted small mb-0">
+                                            Bekijk hier een voorbeeld van de gegenereerde CV.
+                                        </p>
+                                    </div>
+
+                                    <span id="previewStatus" class="badge text-bg-light border">
+                                        Nog geen preview geladen
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="card-body p-4">
+
+                                <div class="ratio ratio-4x3 border rounded-4 overflow-hidden bg-light">
+                                    <iframe id="pdfPreviewFrame"
+                                            class="w-100 h-100 border-0 bg-white d-none"
+                                            title="CV PDF preview">
+                                    </iframe>
+
+                                    <div id="previewEmptyState"
+                                         class="d-flex flex-column align-items-center justify-content-center text-center text-muted p-4">
+                                        <div class="display-5 mb-3">
+                                            <i class="bi bi-file-earmark-pdf"></i>
+                                        </div>
+
+                                        <h6 class="fw-semibold mb-2">
+                                            Geen preview beschikbaar
+                                        </h6>
+
+                                        <p class="small mb-0">
+                                            Klik op <strong>Preview genereren</strong> om je PDF hier te tonen.
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

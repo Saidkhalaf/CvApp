@@ -1,0 +1,137 @@
+.cv-modal-blur {
+  .modal-dialog {
+    max-width: min(1100px, 96vw);
+  }
+
+  .modal-content {
+    border: 0;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
+    border-radius: 1rem;
+  }
+}
+
+.modal-backdrop.show {
+  backdrop-filter: blur(4px);
+}
+
+.cv-embed-frame {
+  min-height: 78vh;
+  border: 0;
+}
+
+.cv-lookup-card {
+  border: 1px solid rgba(100, 116, 139, 0.18);
+  border-radius: 1.75rem;
+  padding: 1rem;
+  background:
+    radial-gradient(circle at top right, rgba(255, 214, 102, 0.1), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+}
+
+.cv-lookup-card.is-filled {
+  border-color: rgba(37, 99, 235, 0.24);
+}
+
+.cv-lookup-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(79, 70, 229, 0.08);
+  color: #4361ee;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.cv-lookup-card__body {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cv-lookup-card__value {
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  font-size: clamp(1.25rem, 2vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1f2937;
+}
+
+.cv-lookup-card__value.is-empty {
+  color: #94a3b8;
+}
+
+.cv-lookup-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.cv-lookup-card__action {
+  min-width: 6.75rem;
+  border-radius: 999px;
+  padding: 0.72rem 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border: 1px solid rgba(59, 130, 246, 0.75);
+  background: #fff;
+  color: #4361ee;
+  font-weight: 600;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.cv-lookup-card__action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(67, 97, 238, 0.14);
+  background: rgba(239, 246, 255, 0.75);
+}
+
+@media (min-width: 768px) {
+  .cv-lookup-card__body {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+  }
+
+  .cv-lookup-card__content {
+    flex: 1 1 auto;
+  }
+
+  .cv-lookup-card__actions {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+  }
+}
+
+
+.js-drag-handle {
+  position: relative;
+  z-index: 10;
+  pointer-events: all;
+  cursor: grab !important;
+}
+.js-drag-handle:active {
+  cursor: grabbing !important;
+}
+
+.sortable-ghost {
+  opacity: 0.15;
+}
+
+.sortable-chosen {
+  opacity: 0.6;
+}
+
+.sortable-drag {
+  opacity: 0.95;
+  box-shadow: 0 1rem 2.5rem rgba(15, 23, 42, 0.25);
+}
+

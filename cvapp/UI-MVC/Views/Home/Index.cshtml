@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Dashboard - ACEN HR Applicatie";
+}
+
+<div class="container-fluid py-4 dashboard-page">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold text-body-emphasis">Welkom bij ACEN HR Applicatie</h2>
+            <p class="text-body-secondary">Maak professionele HR-documenten in enkele stappen</p>
+        </div>
+    </div>
+
+    <!-- Main Action Cards -->
+    <div class="row g-4">
+        <!-- Create CV Card -->
+        <div class="col-lg-6 col-xl-4">
+            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow">
+                <div class="card-body text-center p-4">
+                    <div class="bg-primary bg-gradient d-inline-flex align-items-center justify-content-center mb-3 feature-icon-circle">
+                        <i class="bi bi-file-earmark-person text-white fs-3"></i>
+                    </div>
+                    <h5 class="card-title fw-semibold">Maak je CV</h5>
+                    <p class="card-text text-body-secondary small">Genereer een professioneel CV op basis van je gegevens en voorkeuren.</p>
+                    <a asp-controller="Cv" asp-action="Create" class="btn btn-primary mt-2">
+                        Start nu <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Document Card -->
+        <div class="col-lg-6 col-xl-4">
+            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow">
+                <div class="card-body text-center p-4">
+                    <div class="bg-success bg-gradient d-inline-flex align-items-center justify-content-center mb-3 feature-icon-circle">
+                        <i class="bi bi-cloud-upload text-white fs-3"></i>
+                    </div>
+                    <h5 class="card-title fw-semibold">Logo</h5>
+                    <p class="card-text text-body-secondary small">Upload logo van je bedrijf  of bekijk de logos die al bestaan. Beheer uw logos </p>
+                    <a asp-controller="Documents" asp-action="Upload" class="btn btn-outline-success mt-2">
+                        Logos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Templates Card -->
+        <div class="col-lg-6 col-xl-4">
+            <div class="card feature-card h-100 border-0 shadow-sm hover-shadow">
+                <div class="card-body text-center p-4">
+                    <div class="bg-info bg-gradient d-inline-flex align-items-center justify-content-center mb-3 feature-icon-circle">
+                        <i class="bi bi-collection text-white fs-3"></i>
+                    </div>
+                    <h5 class="card-title fw-semibold">Templates</h5>
+                    <p class="card-text text-body-secondary small">Kies uit vooraf gedefinieerde templates of laad een nieuwe template op </p>
+                    <a asp-controller="Templates" asp-action="Index" class="btn btn-outline-info mt-2">
+                        Bekijk templates
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats / Recent Activity -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card activity-card border-0 shadow-sm">
+                <div class="card-header bg-body-tertiary py-3">
+                    <h6 class="mb-0 fw-semibold text-body-emphasis">Recente Activiteit</h6>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Nog geen recente documenten. Start met het maken van je eerste CV!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

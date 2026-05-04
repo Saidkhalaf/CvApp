@@ -1,0 +1,154 @@
+@model cvapp.ui.web.mvc.Models.Cv.PersonalInfoViewModel
+@{
+    var successMessage = ViewData["SuccessMessage"] as string;
+    var errorMessage = ViewData["ErrorMessage"] as string;
+    var showMessageInSection = ViewData["ShowMessageInSection"] as Func<string, bool>;
+    var opleidingenReturnUrl = ViewData["OpleidingenReturnUrl"] as string ?? string.Empty;
+    var showSuccess = !string.IsNullOrWhiteSpace(successMessage) && (showMessageInSection?.Invoke("opleidingen") ?? false);
+    var showError = !string.IsNullOrWhiteSpace(errorMessage) && (showMessageInSection?.Invoke("opleidingen") ?? false);
+    var addCvEducationModalSrc = Url.Action("Create", "CvEducation", new { returnUrl = opleidingenReturnUrl, embedded = true });
+}
+
+<section id="opleidingen" class="mb-4">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-body border-0 pt-4 px-4 px-lg-5">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-grip-vertical fs-3 me-2 cursor-move js-drag-handle" aria-label="Versleep sectie"></i>
+                    <i class="bi bi-mortarboard text-primary fs-2 me-3"></i>
+                    <div id="opleidingsectie">
+                        <h3 class="mb-0 fw-bold">Opleidingen</h3>
+                        <p class="text-muted mb-0">Beheer de opleidingsgegevens van dit CV.</p>
+                    </div>
+                </div>
+                <button type="button"
+                        class="btn p-0 text-decoration-none"
+                        data-bs-toggle="modal"
+                        data-bs-target="#addCvEducationModal"
+                        title="Nieuwe opleiding toevoegen">
+
+                    <i class="bi bi-plus-circle fs-1"  ></i>
+                </button>
+
+
+
+            </div>
+        </div>
+        <div class="card-body p-4 p-lg-5">
+            @if (showSuccess)
+            {
+                <div class="alert alert-success alert-dismissible fade show d-flex align-items-center js-cv-success-alert" data-auto-hide-ms="5000" role="alert" aria-live="polite">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <div>@successMessage</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Sluiten"></button>
+                </div>
+            }
+            @if (showError)
+            {
+                <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center js-cv-success-alert"
+                     data-auto-hide-ms="2000" role="alert" aria-live="polite">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <div>@errorMessage</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Sluiten"></button>
+                </div>
+            }
+
+            @if (Model.CvEducations.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-body-tertiary border-bottom">
+                        <tr>
+                            <th class="fw-semibold text-muted text-uppercase small">Periode</th>
+                            <th class="fw-semibold text-muted text-uppercase small">Opleiding</th>
+                            <th class="fw-semibold text-muted text-uppercase small d-none d-lg-table-cell">Niveau</th>
+                            <th class="fw-semibold text-muted text-uppercase small d-none d-lg-table-cell">EQF</th>
+                            <th class="fw-semibold text-muted text-uppercase small d-none d-md-table-cell">Instituut</th>
+                            <th class="fw-semibold text-muted text-uppercase small">Status</th>
+                            <th class="text-end fw-semibold text-muted text-uppercase small">Acties</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var education in Model.CvEducations)
+                        {
+                            <tr class="border-bottom border-secondary-subtle">
+                                <td class="fw-medium">@education.StartYear - @education.EndYear</td>
+                                <td class="fw-medium">@education.Major?.Name</td>
+                                <td class="text-muted small d-none d-lg-table-cell">@education.Major?.EducationLevel?.EducationLevel</td>
+                                <td class="text-muted small d-none d-lg-table-cell">@education.Major?.Eqf</td>
+                                <td class="text-muted small d-none d-md-table-cell">@education.InstituteOrSchool?.Name</td>
+                                <td><span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-pill px-3 py-2">@education.Status</span></td>
+                                <td class="text-end">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        @{
+                                            var hasDiploma = !string.IsNullOrWhiteSpace(education.Diploma);
+                                        }
+                                        <a asp-controller="CvEducation"
+                                           asp-action="DownloadDiploma"
+                                           asp-route-id="@education.Id"
+                                           asp-route-returnUrl="@opleidingenReturnUrl"
+                                           class="btn btn-sm btn-light border @(hasDiploma ? "text-success" : "text-danger")"
+                                           title="@(hasDiploma ? "Diploma downloaden" : "Geen diploma beschikbaar")">
+                                            <i class="bi bi-download"></i>
+                                        </a>
+                                     
+                                        
+                                        <button type="button" class="btn btn-sm btn-light text-warning border" title="Bewerken" data-bs-toggle="modal" data-bs-target="#editCvEducationModal" data-modal-title="Opleiding bewerken" data-modal-src="@(Url.Action("Edit", "CvEducation", new { id = education.Id, returnUrl = opleidingenReturnUrl, embedded = true }) ?? string.Empty)">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-light text-danger border" data-bs-toggle="modal" data-bs-target="#deleteCvItemModal" data-delete-action="@(Url.Action("Delete", "CvEducation") ?? "/CvEducation/Delete")" data-delete-id="@education.Id" data-delete-id-name="id" data-delete-return-url="@opleidingenReturnUrl" data-delete-label="@(education.Major?.Name ?? "deze opleiding")" data-delete-type="opleiding">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 bg-body-tertiary rounded-4">
+                    <i class="bi bi-mortarboard fs-1 text-muted opacity-50 d-block mb-3"></i>
+                    <h5 class="mb-2 fw-semibold">Geen opleidingen toegevoegd</h5>
+                    <p class="text-muted mb-4">Voeg je eerste opleiding toe om dit CV compleet te maken.</p>
+                    <button type="button" class="btn btn-primary rounded-pill px-4 d-inline-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addCvEducationModal">
+                        <i class="bi bi-plus-lg"></i>
+                        Nieuwe opleiding
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<div class="modal fade cv-modal-blur" id="addCvEducationModal" tabindex="-1" aria-labelledby="addCvEducationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCvEducationModalLabel">Nieuwe opleiding toevoegen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe title="CV-opleiding toevoegen" class="w-100 cv-embed-frame" src="@addCvEducationModalSrc"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade cv-modal-blur" id="editCvEducationModal" tabindex="-1" aria-labelledby="editCvEducationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCvEducationModalLabel">Opleiding bewerken</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe title="CV-opleiding bewerken" class="w-100 cv-embed-frame" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+

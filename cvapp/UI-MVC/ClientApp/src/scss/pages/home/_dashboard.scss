@@ -1,0 +1,158 @@
+.dashboard-page {
+  // Feature cards
+  .feature-card {
+    background: var(--cvapp-card-bg);
+    border: 1px solid var(--cvapp-card-border);
+    border-radius: var(--cvapp-radius-lg);
+    box-shadow: var(--cvapp-card-shadow);
+    transition: all var(--cvapp-transition-normal);
+    height: 100%;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--cvapp-card-shadow-hover);
+      border-color: var(--cvapp-sidebar-accent);
+    }
+
+    .feature-icon-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--cvapp-feature-icon-radius);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--cvapp-shadow);
+      transition: transform var(--cvapp-transition-fast);
+
+      i {
+        font-size: 1.5rem;
+      }
+    }
+
+    &:hover .feature-icon-circle {
+      transform: scale(1.05);
+    }
+
+    .card-title {
+      font-weight: 600;
+      color: var(--cvapp-text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+      color: var(--cvapp-text-muted);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+  }
+
+  // Button styles
+  .btn-primary {
+    background: var(--cvapp-btn-primary-bg);
+    border-color: var(--cvapp-btn-primary-bg);
+    color: var(--cvapp-btn-primary-text);
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    transition: all var(--cvapp-transition-fast);
+
+    &:hover {
+      background: var(--cvapp-btn-primary-hover);
+      border-color: var(--cvapp-btn-primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--cvapp-shadow);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .btn-outline-success,
+  .btn-outline-info {
+    --bs-btn-color: var(--cvapp-btn-outline-text);
+    --bs-btn-border-color: var(--cvapp-btn-outline-border);
+    --bs-btn-hover-color: var(--cvapp-text-primary);
+    --bs-btn-hover-bg: var(--cvapp-btn-outline-hover-bg);
+    transition: all var(--cvapp-transition-fast);
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  // Recent activity card
+  .activity-card {
+    background: var(--cvapp-card-bg);
+    border: 1px solid var(--cvapp-card-border);
+    border-radius: var(--cvapp-radius-lg);
+    box-shadow: var(--cvapp-card-shadow);
+
+    .card-header {
+      background: transparent;
+      border-bottom: 1px solid var(--cvapp-card-border);
+      padding: 1rem 1.5rem;
+
+      h6 {
+        font-weight: 600;
+        color: var(--cvapp-text-primary);
+        margin: 0;
+      }
+    }
+
+    .alert-info {
+      background: var(--cvapp-alert-info-bg);
+      border-color: var(--cvapp-alert-info-border);
+      color: var(--cvapp-alert-info-text);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+  }
+
+  // Progress indicator
+  .progress-indicator {
+    background: var(--cvapp-card-bg);
+    border: 1px solid var(--cvapp-card-border);
+    border-radius: var(--cvapp-radius);
+
+    .step-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--cvapp-radius-full);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all var(--cvapp-transition-fast);
+
+      &.bg-primary {
+        background: var(--cvapp-badge-primary-bg) !important;
+        color: var(--cvapp-badge-primary-text) !important;
+      }
+
+      &.bg-success {
+        background: var(--cvapp-badge-success-bg) !important;
+        color: var(--cvapp-badge-success-text) !important;
+      }
+
+      &.bg-secondary {
+        background: var(--cvapp-bg-surface-alt) !important;
+        color: var(--cvapp-text-muted) !important;
+      }
+    }
+
+    .step-label {
+      color: var(--cvapp-text-secondary);
+      font-size: 0.75rem;
+      transition: color var(--cvapp-transition-fast);
+    }
+
+    .step-circle.bg-primary + .step-label,
+    .step-circle.bg-success + .step-label {
+      color: var(--cvapp-text-primary);
+      font-weight: 500;
+    }
+  }
+}

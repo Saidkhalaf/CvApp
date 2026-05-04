@@ -1,0 +1,174 @@
+// ===== LIGHT THEME =====
+:root {
+  // Base backgrounds
+  --cvapp-bg-body: #f8fafc;
+  --cvapp-bg-surface: #ffffff;
+  --cvapp-bg-surface-alt: #f1f5f9;
+  --cvapp-bg-surface-hover: #e2e8f0;
+
+  // Sidebar (professional dark blue)
+  --cvapp-sidebar-bg: #0f172a;
+  --cvapp-sidebar-header-bg: #1e293b;
+  --cvapp-sidebar-border: #334155;
+  --cvapp-sidebar-link: #94a3b8;
+  --cvapp-sidebar-link-hover: #f1f5f9;
+  --cvapp-sidebar-link-active: #ffffff;
+  --cvapp-sidebar-link-active-bg: #334155;
+  --cvapp-sidebar-accent: #60a5fa;
+  --cvapp-sidebar-backdrop: rgba(15, 23, 42, 0.6);
+
+  // Text colors
+  --cvapp-text-primary: #0f172a;
+  --cvapp-text-secondary: #475569;
+  --cvapp-text-muted: #64748b;
+  --cvapp-text-inverse: #ffffff;
+
+  // Form controls
+  --cvapp-control-bg: #ffffff;
+  --cvapp-control-border: #cbd5e1;
+  --cvapp-control-border-focus: #3b82f6;
+  --cvapp-control-text: #0f172a;
+  --cvapp-control-placeholder: #94a3b8;
+  --cvapp-control-hover-bg: #f8fafc;
+  --cvapp-control-shadow: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --cvapp-control-shadow-focus: 0 0 0 4px rgb(59 130 246 / 0.15);
+
+  // Cards & surfaces
+  --cvapp-card-bg: #ffffff;
+  --cvapp-card-border: #e2e8f0;
+  --cvapp-card-shadow: 0 1px 3px 0 rgb(15 23 42 / 0.1), 0 1px 2px -1px rgb(15 23 42 / 0.1);
+  --cvapp-card-shadow-hover: 0 4px 6px -1px rgb(15 23 42 / 0.1), 0 2px 4px -2px rgb(15 23 42 / 0.1);
+
+  // Buttons
+  --cvapp-btn-primary-bg: #1e40af;
+  --cvapp-btn-primary-hover: #1d4ed8;
+  --cvapp-btn-primary-active: #1e3a8a;
+  --cvapp-btn-primary-text: #ffffff;
+  --cvapp-btn-outline-border: #cbd5e1;
+  --cvapp-btn-outline-text: #475569;
+  --cvapp-btn-outline-hover-bg: #f1f5f9;
+
+  // Tables
+  --cvapp-table-header-bg: #f8fafc;
+  --cvapp-table-header-border: #e2e8f0;
+  --cvapp-table-row-hover: #f8fafc;
+  --cvapp-table-row-striped: #f8fafc;
+
+  // Alerts & badges
+  --cvapp-alert-success-bg: #dcfce7;
+  --cvapp-alert-success-border: #86efac;
+  --cvapp-alert-success-text: #166534;
+  --cvapp-alert-error-bg: #fee2e2;
+  --cvapp-alert-error-border: #fca5a5;
+  --cvapp-alert-error-text: #991b1b;
+  --cvapp-alert-info-bg: #dbeafe;
+  --cvapp-alert-info-border: #93c5fd;
+  --cvapp-alert-info-text: #1e40af;
+
+  // Badges
+  --cvapp-badge-primary-bg: #3b82f6;
+  --cvapp-badge-primary-text: #ffffff;
+  --cvapp-badge-success-bg: #22c55e;
+  --cvapp-badge-success-text: #ffffff;
+  --cvapp-badge-warning-bg: #f59e0b;
+  --cvapp-badge-warning-text: #ffffff;
+
+  // Transitions
+  --cvapp-transition-fast: 150ms ease;
+  --cvapp-transition-normal: 250ms ease;
+  --cvapp-transition-slow: 350ms ease;
+
+  // Shadows (elevation system)
+  --cvapp-shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --cvapp-shadow: 0 1px 3px 0 rgb(15 23 42 / 0.1), 0 1px 2px -1px rgb(15 23 42 / 0.1);
+  --cvapp-shadow-md: 0 4px 6px -1px rgb(15 23 42 / 0.1), 0 2px 4px -2px rgb(15 23 42 / 0.1);
+  --cvapp-shadow-lg: 0 10px 15px -3px rgb(15 23 42 / 0.1), 0 4px 6px -4px rgb(15 23 42 / 0.1);
+  --cvapp-shadow-xl: 0 20px 25px -5px rgb(15 23 42 / 0.1), 0 8px 10px -6px rgb(15 23 42 / 0.1);
+
+  // Border radius
+  --cvapp-radius-sm: 0.25rem;
+  --cvapp-radius: 0.5rem;
+  --cvapp-radius-lg: 0.75rem;
+  --cvapp-radius-xl: 1rem;
+  --cvapp-radius-full: 9999px;
+  --cvapp-feature-icon-radius: 0.75rem;
+}
+
+// ===== DARK THEME =====
+[data-bs-theme="dark"] {
+  // Base backgrounds
+  --cvapp-bg-body: #0f172a;
+  --cvapp-bg-surface: #1e293b;
+  --cvapp-bg-surface-alt: #334155;
+  --cvapp-bg-surface-hover: #475569;
+
+  // Sidebar (deeper dark)
+  --cvapp-sidebar-bg: #020617;
+  --cvapp-sidebar-header-bg: #0f172a;
+  --cvapp-sidebar-border: #334155;
+  --cvapp-sidebar-link: #94a3b8;
+  --cvapp-sidebar-link-hover: #f1f5f9;
+  --cvapp-sidebar-link-active: #ffffff;
+  --cvapp-sidebar-link-active-bg: #334155;
+  --cvapp-sidebar-accent: #93c5fd;
+  --cvapp-sidebar-backdrop: rgba(2, 6, 23, 0.75);
+
+  // Text colors
+  --cvapp-text-primary: #f1f5f9;
+  --cvapp-text-secondary: #cbd5e1;
+  --cvapp-text-muted: #94a3b8;
+  --cvapp-text-inverse: #0f172a;
+
+  // Form controls
+  --cvapp-control-bg: #1e293b;
+  --cvapp-control-border: #475569;
+  --cvapp-control-border-focus: #60a5fa;
+  --cvapp-control-text: #f1f5f9;
+  --cvapp-control-placeholder: #64748b;
+  --cvapp-control-hover-bg: #334155;
+  --cvapp-control-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.2);
+  --cvapp-control-shadow-focus: 0 0 0 4px rgb(96 165 250 / 0.25);
+
+  // Cards & surfaces
+  --cvapp-card-bg: #1e293b;
+  --cvapp-card-border: #334155;
+  --cvapp-card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.2);
+  --cvapp-card-shadow-hover: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+
+  // Buttons
+  --cvapp-btn-primary-bg: #3b82f6;
+  --cvapp-btn-primary-hover: #60a5fa;
+  --cvapp-btn-primary-active: #2563eb;
+  --cvapp-btn-primary-text: #ffffff;
+  --cvapp-btn-outline-border: #475569;
+  --cvapp-btn-outline-text: #cbd5e1;
+  --cvapp-btn-outline-hover-bg: #334155;
+
+  // Tables
+  --cvapp-table-header-bg: #1e293b;
+  --cvapp-table-header-border: #334155;
+  --cvapp-table-row-hover: #334155;
+  --cvapp-table-row-striped: #1e293b;
+
+  // Alerts & badges
+  --cvapp-alert-success-bg: #14532d;
+  --cvapp-alert-success-border: #22c55e;
+  --cvapp-alert-success-text: #86efac;
+  --cvapp-alert-error-bg: #7f1d1d;
+  --cvapp-alert-error-border: #ef4444;
+  --cvapp-alert-error-text: #fca5a5;
+  --cvapp-alert-info-bg: #1e3a8a;
+  --cvapp-alert-info-border: #3b82f6;
+  --cvapp-alert-info-text: #93c5fd;
+
+  // Badges
+  --cvapp-badge-primary-bg: #3b82f6;
+  --cvapp-badge-primary-text: #ffffff;
+  --cvapp-badge-success-bg: #22c55e;
+  --cvapp-badge-success-text: #ffffff;
+  --cvapp-badge-warning-bg: #f59e0b;
+  --cvapp-badge-warning-text: #0f172a;
+
+  // Keep icon shape consistent across color modes
+  --cvapp-feature-icon-radius: 0.75rem;
+}

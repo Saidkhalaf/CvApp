@@ -1,0 +1,231 @@
+@using cvapp.ui.web.mvc.Extensions
+@model cvapp.ui.web.mvc.Models.Cv.PersonalInfoViewModel
+@{
+    ViewData["Title"] = "Maak je CV";
+    var cvSections = CvSections.Sections; 
+
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
+    var messageSection = TempData["MessageSection"] as string;
+    
+    if (!string.IsNullOrWhiteSpace(successMessage))
+        TempData.Keep("SuccessMessage");
+    if (!string.IsNullOrWhiteSpace(errorMessage))
+        TempData.Keep("ErrorMessage");
+    if (!string.IsNullOrWhiteSpace(messageSection))
+        TempData.Keep("MessageSection");
+
+    var opleidingenBaseUrl = Url.Action("Create", "Cv", new { personId = Model.Id > 0 ? Model.Id : (long?)null, section = "opleidingen" }) ?? "/Cv/Create?section=opleidingen";
+    var opleidingenReturnUrl = $"{opleidingenBaseUrl}";
+
+    var talenBaseUrl = Url.Action("Create", "Cv", new { personId = Model.Id > 0 ? Model.Id : (long?)null, section = "talen" }) ?? "/Cv/Create?section=talen";
+    var talenReturnUrl = $"{talenBaseUrl}";
+
+    var addCvEducationModalSrc = Url.Action("Create", "CvEducation", new { returnUrl = opleidingenReturnUrl, embedded = true }) ?? "/CvEducation/Create";
+    var addLanguageModalSrc = Url.Action("Add", "Language", new { returnUrl = talenReturnUrl, embedded = true }) ?? "/Language/Add";
+
+    var certificatenBaseUrl = Url.Action("Create", "Cv", new { personId = Model.Id > 0 ? Model.Id : (long?)null, section = "certificaten" }) ?? "/Cv/Create?section=certificaten";
+    var certificatenReturnUrl = $"{certificatenBaseUrl}";
+    var addCvCertificateModalSrc = Url.Action("Create", "CvCertificate", new { returnUrl = certificatenReturnUrl, embedded = true }) ?? "/CvCertificate/Create";
+   
+    bool ShowMessageInSection(string section) =>
+        string.Equals(messageSection, section, StringComparison.OrdinalIgnoreCase) ||
+        (string.IsNullOrWhiteSpace(messageSection) && string.Equals(Model.Section, section, StringComparison.OrdinalIgnoreCase));
+}
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm bg-primary bg-gradient text-white rounded-4 overflow-hidden">
+                <div class="card-body p-4 p-lg-5">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-file-earmark-person display-4 me-3"></i>
+                        <div>
+                            <h2 class="mb-0 fw-bold text-body">Maak je CV</h2>
+                            <p class="mb-0 opacity-75">Stel je professionele CV samen in enkele stappen</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        @foreach (var sectionItem in cvSections.Select((s, i) => new { s, i }))
+                        {
+                            var isActive = sectionItem.s.Route == "persoon-gegevens";
+                            var badgeClass = isActive ? "bg-primary" : "bg-secondary bg-opacity-25";
+                            var textClass = isActive ? "text-primary fw-semibold" : "text-muted";
+
+                            <div class="d-flex align-items-center flex-fill">
+                                <div class="d-flex align-items-center justify-content-center rounded-circle @badgeClass text-white @textClass" style="width: 40px; height: 40px; min-width: 40px;">
+                                    @(sectionItem.i + 1)
+                                </div>
+                                <span class="d-none d-md-block ms-2 small @textClass">@sectionItem.s.Label</span>
+                                @if (sectionItem.i < cvSections.Length - 1)
+                                {
+                                    <hr class="flex-fill mx-2 mb-0 d-none d-md-block" style="height: 2px;" />
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Other Sections *@
+    @* Wrap the loop in the sortable container we defined in the TS *@
+    <div id="cv-sections-container" class="js-sortable-container">
+        @foreach (var cvSection in cvSections)
+        {
+            <div class="js-sortable-item mb-5">
+                @switch (cvSection.Route)
+                {
+                    case "persoon-gegevens":
+                        <partial name="~/Views/Cv/Sections/_PersonalInformationSection.cshtml" model="Model" />
+                        break;
+                    case "opleidingen":
+                        <partial name="~/Views/Cv/Sections/_EducationSection.cshtml" model="Model" />
+                        break;
+                    case "talen":
+                        <partial name="~/Views/Cv/Sections/_LanguagesSection.cshtml" model="Model" />
+                        break;
+                    case "cursussen-trainingen":
+                        <partial name="~/Views/Cv/Sections/_TrainingSection.cshtml" model="Model" />
+                        break;
+                    case "certificaten":
+                        <partial name="~/Views/Cv/Sections/_CertificatesSection.cshtml" model="Model"/>
+                        break;
+                    default:
+                        <partial name="~/Views/Cv/Sections/_ComingSoonSection.cshtml" model="Model" view-data='new ViewDataDictionary(ViewData) { ["Route"] = cvSection.Route, ["Label"] = cvSection.Label }' />
+                        break;
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal fade cv-modal-blur" id="deleteCvItemModal" tabindex="-1" aria-labelledby="deleteCvItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteCvItemModalLabel">Verwijderen bevestigen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2">Weet je zeker dat je dit wilt verwijderen?</p>
+                <div class="small text-muted">
+                    <span class="fw-semibold text-dark" id="deleteCvItemType"></span>
+                    <span id="deleteCvItemLabel"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuleren</button>
+                <form id="deleteCvItemForm" method="post" class="m-0">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="deleteCvItemId" name="id" />
+                    <input type="hidden" id="deleteCvItemLanguageId" name="languageId" />
+                    <input type="hidden" id="deleteCvItemReturnUrl" name="returnUrl" />
+                    <button type="submit" class="btn btn-danger">Verwijderen</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade cv-modal-blur" id="addCvEducationModal" tabindex="-1" aria-labelledby="addCvEducationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCvEducationModalLabel">Nieuwe opleiding toevoegen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe title="CV-opleiding toevoegen" class="w-100 cv-embed-frame" src="@addCvEducationModalSrc"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade cv-modal-blur" id="editCvEducationModal" tabindex="-1" aria-labelledby="editCvEducationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCvEducationModalLabel">Opleiding bewerken</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe title="CV-opleiding bewerken" class="w-100 cv-embed-frame" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade cv-modal-blur" id="addLanguageModal" tabindex="-1" aria-labelledby="addLanguageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addLanguageModalLabel">Nieuwe taal toevoegen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe title="CV-taal toevoegen" class="w-100 cv-embed-frame" src="@addLanguageModalSrc"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade cv-modal-blur" id="editLanguageModal" tabindex="-1" aria-labelledby="editLanguageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editLanguageModalLabel">Taal bewerken</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe title="CV-taal bewerken" class="w-100 cv-embed-frame" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade cv-modal-blur" id="addCvCertificateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nieuw certificaat toevoegen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe title="CV-certificaat toevoegen" class="w-100 cv-embed-frame" src="@addCvCertificateModalSrc"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade cv-modal-blur" id="editCvCertificateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Certificaat bewerken</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe title="CV-certificaat bewerken" class="w-100 cv-embed-frame" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

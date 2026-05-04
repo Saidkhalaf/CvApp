@@ -1,0 +1,191 @@
+#sidebar {
+  min-width: 260px;
+  max-width: 260px;
+  background: var(--cvapp-sidebar-bg);
+  color: var(--cvapp-sidebar-link);
+  transition: all var(--cvapp-transition-normal);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-self: flex-start;
+  flex-shrink: 0;
+  border-right: 1px solid var(--cvapp-sidebar-border);
+  z-index: 1040;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--cvapp-sidebar-border);
+    border-radius: var(--cvapp-radius-full);
+
+    &:hover {
+      background: var(--cvapp-sidebar-accent);
+    }
+  }
+}
+
+#sidebar .sidebar-header {
+  padding: 1.25rem 1.5rem;
+  background: var(--cvapp-sidebar-header-bg);
+  border-bottom: 1px solid var(--cvapp-sidebar-border);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  h5 {
+    font-weight: 600;
+    color: var(--cvapp-sidebar-link-active);
+    letter-spacing: -0.025em;
+  }
+
+  i {
+    color: var(--cvapp-sidebar-accent);
+    font-size: 1.25rem;
+  }
+}
+
+#sidebar ul.components {
+  padding: 0.75rem 0;
+}
+
+#sidebar ul li {
+  margin: 0.125rem 0;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--cvapp-sidebar-link);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all var(--cvapp-transition-fast);
+    position: relative;
+
+    i {
+      width: 1.25rem;
+      text-align: center;
+      font-size: 1rem;
+      opacity: 0.9;
+      transition: opacity var(--cvapp-transition-fast);
+    }
+
+    &:hover {
+      background: var(--cvapp-sidebar-link-hover-bg);
+      color: var(--cvapp-sidebar-link-hover);
+      border-left-color: var(--cvapp-sidebar-accent);
+
+      i {
+        opacity: 1;
+      }
+    }
+
+    &.active {
+      background: var(--cvapp-sidebar-link-active-bg);
+      color: var(--cvapp-sidebar-link-active);
+      border-left-color: var(--cvapp-sidebar-accent);
+      font-weight: 600;
+
+      i {
+        color: var(--cvapp-sidebar-accent);
+      }
+    }
+  }
+}
+
+// CV Submenu styles
+#sidebar .cv-submenu-toggle {
+  padding-right: 1rem;
+
+  .bi-chevron-down {
+    transition: transform var(--cvapp-transition-fast);
+    opacity: 0.7;
+  }
+
+  &[aria-expanded="true"] .bi-chevron-down {
+    transform: rotate(180deg);
+  }
+
+  &:hover .bi-chevron-down {
+    opacity: 1;
+  }
+}
+
+#sidebar #cvSubmenu {
+  padding-left: 0.5rem;
+
+  .cv-step-link {
+    padding: 0.5rem 1rem 0.5rem 2.75rem;
+    font-size: 0.8125rem;
+
+    .cv-step-badge {
+      width: 28px;
+      height: 28px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      box-shadow: var(--cvapp-shadow-sm);
+      transition: all var(--cvapp-transition-fast);
+    }
+
+    &:hover .cv-step-badge {
+      background: var(--cvapp-sidebar-accent) !important;
+      color: var(--cvapp-text-inverse) !important;
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Sidebar backdrop for mobile
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--cvapp-sidebar-backdrop);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--cvapp-transition-normal);
+  z-index: 1035;
+}
+
+// Desktop: checked means collapsed.
+#sidebarToggle:checked ~ .wrapper #sidebar {
+  margin-left: -260px;
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin-left: -260px;
+    box-shadow: var(--cvapp-shadow-lg);
+  }
+
+  #sidebarToggle:checked ~ .wrapper {
+    #sidebar {
+      margin-left: 0;
+    }
+
+    .sidebar-backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+// Hover effect utility
+.hover-bg-primary:hover {
+  background-color: var(--cvapp-sidebar-link-hover-bg) !important;
+  color: var(--cvapp-sidebar-link-hover) !important;
+  transition: all var(--cvapp-transition-fast);
+}

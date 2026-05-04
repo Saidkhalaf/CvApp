@@ -1,0 +1,121 @@
+@model cvapp.ui.web.mvc.Models.Cv.PersonalInfoViewModel
+
+<section id="cursussen-trainingen" class="mb-5">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        @* --- Header --- *@
+        <div class="card-header bg-primary bg-gradient text-white p-4 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-grip-vertical fs-3 me-2 cursor-move js-drag-handle"></i>
+                <i class="bi bi-award fs-2 me-3"></i>
+                <div>
+                    <h3 class="mb-0 fw-bold">Cursussen & Trainingen</h3>
+                    <p class="mb-0 opacity-75">Breng je gevolgde cursussen/opleidingen in kaart</p>
+                </div>
+            </div>
+            
+            
+            <div class="d-flex align-items-center gap-3">
+                @* Button to collapse the WHOLE section *@
+                <button class="btn btn-link text-white p-0 shadow-none" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#collapseTrainingSection" 
+                        aria-expanded="true">
+                    <i class="bi bi-chevron-down fs-4"></i>
+                </button>
+            </div>
+        </div>
+
+        @* --- Section Body (Collapsible) --- *@
+        <div id="collapseTrainingSection" class="collapse show">
+            <div class="card-body p-0">
+                
+                @* FIX: Verander bg-light naar bg-body-tertiary voor dynamische achtergrond *@
+                <div class="d-flex justify-content-end p-3 bg-body-tertiary border-bottom">
+                    <button class="btn btn-primary rounded-circle shadow-sm" 
+                            type="button" 
+                            data-bs-toggle="collapse" 
+                            data-bs-target="#collapseNewTraining"
+                            title="Nieuwe training toevoegen">
+                        <i class="bi bi-plus-lg fs-5"></i>
+                    </button>
+                </div>
+                
+                @* FIX: Verander bg-light naar bg-body-secondary voor Dark Mode support *@
+                <div class="collapse border-bottom bg-body-secondary" id="collapseNewTraining">
+                    <div class="p-4 p-lg-5">
+                        <div class="d-flex align-items-center mb-4">
+                            <i class="bi bi-plus-circle-fill text-primary fs-4 me-2"></i>
+                            <h5 class="mb-0 fw-bold text-body">Nieuwe training toevoegen</h5>
+                        </div>
+                        @await Html.PartialAsync("~/Views/Training/Create.cshtml", new CVAPP.UI.Web.MVC.Models.Training.CreateTrainingViewModel { PersonId = Model.Id, IsEmbedded = true })
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <tbody id="trainings-list">
+                            @if (!Model.Trainings.Any())
+                            {
+                                <tr>
+                                    <td colspan="2" class="p-5 text-center text-secondary italic">
+                                        <i class="bi bi-info-circle me-2"></i>Geen cursussen of trainingen toegevoegd.
+                                    </td>
+                                </tr>
+                            }
+
+                            @foreach (var training in Model.Trainings)
+                            {
+                                <tr class="border-bottom vstack-hover" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#edit-training-@training.Id"
+                                    style="cursor: pointer;">
+                                    <td class="ps-4 py-3">
+                                        <div class="fw-bold text-body fs-5 js-training-name-label">@training.Name</div>
+
+                                        <div class="small text-secondary d-flex flex-wrap gap-2 align-items-center">
+                                            <span class="js-training-year-label"><i class="bi bi-calendar3 me-1"></i> @training.Year</span>
+                                            <span class="opacity-50">|</span>
+                                            <span class="js-training-institute-label"><i class="bi bi-building me-1"></i> @(training.InstituteOrSchool?.Name ?? "Geen instituut")</span>
+                                            <span class="opacity-50">|</span>
+                                            <span class="js-training-exam-label"><i class="bi bi-file-earmark-check me-1"></i> @(training.Exam?.Name ?? "Geen examen")</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-end pe-4" style="white-space: nowrap;">
+                                        @* Bewerk knop: Gebruik btn-outline-secondary voor betere balans in Dark Mode *@
+                                        <button class="btn btn-sm btn-outline-warning border rounded-circle me-1" 
+                                                type="button">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        
+                                        @* Verwijder knop (Icoon) *@
+                                        <button class="btn btn-sm btn-light btn-outline-danger rounded-circle" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#deleteCvItemModal" 
+                                                data-delete-id="@training.Id" 
+                                                data-delete-type="training"
+                                                data-delete-action="@Url.Action("Delete", "Training")"
+                                                title="Verwijder"
+                                                >
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan="2" class="p-0 border-0">
+                                        <div class="collapse bg-body-tertiary" id="edit-training-@training.Id">
+                                            <div class="p-4 p-lg-5 border-start border-4 border-primary">
+                                                @await Html.PartialAsync("~/Views/Training/Edit.cshtml", training)
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

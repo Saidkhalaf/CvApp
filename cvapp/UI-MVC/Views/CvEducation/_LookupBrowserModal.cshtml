@@ -1,0 +1,69 @@
+<div class="modal fade cv-modal-blur cv-lookup-modal"
+     id="cvLookupBrowserModal"
+     tabindex="-1"
+     aria-labelledby="cvLookupBrowserModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <div class="cv-lookup-modal__intro">
+                    <div class="cv-lookup-modal__eyebrow">LOOKUP BROWSER</div>
+                    <h5 class="modal-title mt-2"
+                        id="cvLookupBrowserModalLabel"
+                        data-lookup-modal-title>
+                        Lookup kiezen
+                    </h5>
+                    <p class="cv-lookup-modal__description mb-0 mt-2"
+                       data-lookup-modal-description>
+                        Zoek en selecteer een waarde uit de lookup-tabel.
+                    </p>
+                </div>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="cv-lookup-modal__toolbar mb-4">
+                    <label for="cvLookupBrowserSearch" class="form-label fw-semibold">Zoeken</label>
+
+                    <div class="cv-lookup-modal__search-shell">
+                        <i class="bi bi-search cv-lookup-modal__search-icon" aria-hidden="true"></i>
+                        <input id="cvLookupBrowserSearch"
+                               type="search"
+                               class="form-control cv-lookup-modal__search-input"
+                               placeholder="Typ om te zoeken..."
+                               autocomplete="off"
+                               data-lookup-modal-search />
+                    </div>
+                </div>
+
+                <div class="cv-lookup-modal__status-bar mb-3">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <span class="cv-lookup-modal__badge" data-lookup-modal-badge>Lookup</span>
+                        <span class="fw-semibold text-muted" data-lookup-modal-count></span>
+                    </div>
+
+                    <button type="button"
+                            class="btn btn-outline-secondary rounded-pill px-3"
+                            data-lookup-modal-clear>
+                        Selectie wissen
+                    </button>
+                </div>
+
+                <div class="cv-lookup-modal__surface border rounded-4 overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead data-lookup-modal-head></thead>
+                            <tbody data-lookup-modal-body></tbody>
+                        </table>
+                    </div>
+
+                    <div class="px-4 py-4 text-center text-muted"
+                         hidden
+                         data-lookup-modal-empty>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

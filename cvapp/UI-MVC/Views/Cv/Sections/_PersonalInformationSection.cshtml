@@ -1,0 +1,181 @@
+@model cvapp.ui.web.mvc.Models.Cv.PersonalInfoViewModel
+@using cvapp.BL.Domain.enums
+@{
+    var successMessage = ViewData["SuccessMessage"] as string;
+    var errorMessage = ViewData["ErrorMessage"] as string;
+    var showMessageInSection = ViewData["ShowMessageInSection"] as Func<string, bool>;
+    var showSuccess = !string.IsNullOrWhiteSpace(successMessage) && (showMessageInSection?.Invoke("persoon-gegevens") ?? false);
+    var showError = !string.IsNullOrWhiteSpace(errorMessage) && (showMessageInSection?.Invoke("persoon-gegevens") ?? false);
+}
+
+<section id="persoon-gegevens" class="mb-5">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-primary bg-gradient text-white p-4 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-grip-vertical fs-3 me-2 cursor-move js-drag-handle"></i>
+                <i class="bi bi-person-lines-fill fs-2 me-3"></i>
+                <div>
+                    <h3 class="mb-0 fw-bold">Persoonlijke informatie</h3>
+                    <p class="mb-0 opacity-75">Stel je professionele profiel en contactgegevens in</p>
+                </div>
+            </div>
+            
+            <button class="btn btn-link text-white p-0 shadow-none" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#collapsePersonalInfo" 
+                    aria-expanded="true" 
+                    aria-controls="collapsePersonalInfo">
+                <i class="bi bi-chevron-down fs-4"></i>
+            </button>
+        </div>
+
+        <div id="collapsePersonalInfo" class="collapse show">
+            <div class="card-body p-4 p-lg-5">
+                <form asp-controller="Cv" asp-action="AutoSave" method="post" novalidate class="js-cv-create-form" autocomplete="on">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="Id" type="hidden" />
+                    <input asp-for="Section" type="hidden" value="persoon-gegevens" />
+
+                    @if (showSuccess)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4 js-cv-success-alert" data-auto-hide-ms="5000" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i> @successMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Sluiten"></button>
+                        </div>
+                    }
+
+                    @if (showError)
+                    {
+                        <div class="alert alert-danger border-0 shadow-sm mb-4 d-flex align-items-center" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @errorMessage
+                        </div>
+                    }
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-4"></div>
+
+                    <div class="mb-5">
+                        <h5 class="fw-bold mb-3 text-primary">
+                            <i class="bi bi-briefcase-fill me-2"></i>Professioneel Profiel
+                        </h5>
+                        <div class="p-4 bg-body-tertiary rounded-4 border border-2 border-white shadow-sm">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label asp-for="JobTitle" class="form-label fw-semibold d-flex align-items-center">
+                                        Professionele Titel / Functie <span class="text-danger ms-1">*</span>
+                                    </label>
+                                    <input asp-for="JobTitle" class="form-control form-control-lg border-secondary-subtle" placeholder="bijv. Senior .NET Developer" autocomplete="organization-title" />
+                                    <span asp-validation-for="JobTitle" class="text-danger small"></span>
+                                </div>
+                                <div class="col-12">
+                                    <label asp-for="Summary" class="form-label fw-semibold d-flex align-items-center">
+                                        Over Mij / Samenvatting <span class="text-danger ms-1">*</span>
+                                    </label>
+                                    <textarea asp-for="Summary" class="form-control border-secondary-subtle" rows="5" maxlength="1000" placeholder="Vertel kort over je expertise..." autocomplete="off"></textarea>
+                                    <div class="d-flex justify-content-between mt-1">
+                                        <span asp-validation-for="Summary" class="text-danger small"></span>
+                                        <small class="text-muted">Maximaal 1000 tekens</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <h5 class="fw-bold mb-3 text-primary">
+                            <i class="bi bi-person-badge-fill me-2"></i>Basisgegevens
+                        </h5>
+                        <div class="p-4 bg-body-tertiary rounded-4 border border-2 border-white shadow-sm">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label asp-for="FirstName" class="form-label fw-semibold d-flex align-items-center">Voornaam <span class="text-danger ms-1">*</span></label>
+                                    <input asp-for="FirstName" class="form-control border-secondary-subtle" autocomplete="given-name" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="LastName" class="form-label fw-semibold d-flex align-items-center">Achternaam <span class="text-danger ms-1">*</span></label>
+                                    <input asp-for="LastName" class="form-control border-secondary-subtle" autocomplete="family-name" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="DateOfBirth" class="form-label fw-semibold">Geboortedatum</label>
+                                    <input asp-for="DateOfBirth" type="date" class="form-control border-secondary-subtle" autocomplete="bday" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="Gender" class="form-label fw-semibold">Geslacht</label>
+                                    <select asp-for="Gender" class="form-select border-secondary-subtle" asp-items="Html.GetEnumSelectList<Gender>()" autocomplete="sex">
+                                        <option value="">Selecteer...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="MaritalStatus" class="form-label fw-semibold">Burgerlijke staat</label>
+                                    <select asp-for="MaritalStatus" class="form-select border-secondary-subtle" asp-items="Html.GetEnumSelectList<MaritalStatus>()" autocomplete="off">
+                                        <option value="">Selecteer...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <h5 class="fw-bold mb-3 text-primary">
+                            <i class="bi bi-envelope-at-fill me-2"></i>Contact & Locatie
+                        </h5>
+                        <div class="p-4 bg-body-tertiary rounded-4 border border-2 border-white shadow-sm">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label asp-for="Street" class="form-label fw-semibold d-flex align-items-center">Straat <span class="text-danger ms-1">*</span></label>
+                                    <input asp-for="Street" class="form-control border-secondary-subtle" autocomplete="address-line1" />
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <label asp-for="HouseNumber" class="form-label fw-semibold d-flex align-items-center">Huisnr. <span class="text-danger ms-1">*</span></label>
+                                    <input asp-for="HouseNumber" class="form-control border-secondary-subtle" autocomplete="address-line2" />
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <label asp-for="Bus" class="form-label fw-semibold">Bus</label>
+                                    <input asp-for="Bus" class="form-control border-secondary-subtle" autocomplete="address-line3" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="PostalCode" class="form-label fw-semibold d-flex align-items-center">Postcode <span class="text-danger ms-1">*</span></label>
+                                    <input asp-for="PostalCode" class="form-control border-secondary-subtle" autocomplete="postal-code" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="City" class="form-label fw-semibold d-flex align-items-center">Gemeente/Stad <span class="text-danger ms-1">*</span></label>
+                                    <input asp-for="City" class="form-control border-secondary-subtle" autocomplete="address-level2" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="Country" class="form-label fw-semibold d-flex align-items-center">Land <span class="text-danger ms-1">*</span></label>
+                                    <input asp-for="Country" class="form-control border-secondary-subtle" autocomplete="country-name" />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="Email" class="form-label fw-semibold d-flex align-items-center">E-mailadres <span class="text-danger ms-1">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-body-tertiary"><i class="bi bi-envelope"></i></span>
+                                        <input asp-for="Email" type="email" class="form-control border-secondary-subtle" autocomplete="email" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="Phone" class="form-label fw-semibold">Telefoonnummer</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-body-tertiary"><i class="bi bi-telephone"></i></span>
+                                        <input asp-for="Phone" type="tel" class="form-control border-secondary-subtle" autocomplete="tel" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label asp-for="LinkedInUrl" class="form-label fw-semibold">LinkedIn Profiel</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-primary text-white border-0"><i class="bi bi-linkedin"></i></span>
+                                        <input asp-for="LinkedInUrl" class="form-control border-secondary-subtle" placeholder="https://linkedin.com/in/jouwnaam" autocomplete="url" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

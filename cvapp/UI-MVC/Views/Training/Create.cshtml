@@ -1,0 +1,82 @@
+@using cvapp.BL.Domain.enums
+@model CVAPP.UI.Web.MVC.Models.Training.CreateTrainingViewModel
+@{ Layout = null; }
+
+<form id="form-create-training" asp-controller="Training" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="PersonId" type="hidden" />
+    <input asp-for="IsEmbedded" type="hidden" value="true" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+    @* 1. Basic Training Data - Gebruik bg-body-tertiary i.p.v. bg-white *@
+    <div class="p-4 bg-body-tertiary rounded-4 border shadow-sm mb-4">
+        <div class="row g-3">
+            <div class="col-md-8">
+                <label asp-for="Name" class="form-label fw-bold text-body">
+                    Naam cursus/training <span class="text-danger ms-1">*</span>
+                </label>
+                <input asp-for="Name" class="form-control form-control-lg bg-body border-primary-subtle text-body" placeholder="Bijv. AWS Certified Cloud Practitioner" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Year" class="form-label fw-bold text-body">
+                    Jaar <span class="text-danger ms-1">*</span>
+                </label>
+                <input asp-for="Year" type="number" class="form-control form-control-lg bg-body border-primary-subtle text-body" />
+                <span asp-validation-for="Year" class="text-danger small"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="CourseType" class="form-label fw-bold text-body">
+                    Type cursus <span class="text-danger ms-1">*</span>
+                </label>
+                <select asp-for="CourseType" class="form-select bg-body border-primary-subtle text-body" asp-items="Html.GetEnumSelectList<CourseType>()">
+                    <option value="">-- Selecteer type --</option>
+                </select>
+                <span asp-validation-for="CourseType" class="text-danger small"></span>
+            </div>
+        </div>
+    </div>
+
+    @* 2. Institute (Collapsible) *@
+    <div class="mb-4">
+        <button class="btn btn-outline-secondary bg-body-tertiary w-100 text-start d-flex justify-content-between align-items-center p-3 rounded-4 shadow-sm border" 
+                type="button" data-bs-toggle="collapse" data-bs-target="#collapseNewInstitute">
+            <span class="fw-bold text-success"><i class="bi bi-building me-2"></i> Instituut Details (Optioneel)</span>
+            <i class="bi bi-chevron-down text-secondary"></i>
+        </button>   
+        <div class="collapse mt-2" id="collapseNewInstitute">
+            <div class="p-4 bg-body-tertiary rounded-4 border border-success-subtle shadow-sm">
+                @{ 
+                    ViewData.TemplateInfo.HtmlFieldPrefix = "InstituteOrSchool";
+                    await Html.RenderPartialAsync("~/Views/Training/_InstituteFields.cshtml", Model.InstituteOrSchool);
+                    ViewData.TemplateInfo.HtmlFieldPrefix = ""; 
+                }
+            </div>
+        </div>
+    </div>
+
+    @* 3. Exam (Collapsible) *@
+    <div class="mb-4">
+        <button class="btn btn-outline-secondary bg-body-tertiary w-100 text-start d-flex justify-content-between align-items-center p-3 rounded-4 shadow-sm border" 
+                type="button" data-bs-toggle="collapse" data-bs-target="#collapseNewExam">
+            <span class="fw-bold text-info"><i class="bi bi-patch-check me-2"></i> Examen Details (Optioneel)</span>
+            <i class="bi bi-chevron-down text-secondary"></i>
+        </button>
+        <div class="collapse mt-2" id="collapseNewExam">
+            <div class="p-4 bg-body-tertiary rounded-4 border border-info-subtle shadow-sm">
+                @{ 
+                    ViewData.TemplateInfo.HtmlFieldPrefix = "Exam";
+                    await Html.RenderPartialAsync("~/Views/Training/_ExamFields.cshtml",Model.Exam);
+                    ViewData.TemplateInfo.HtmlFieldPrefix = ""; 
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <small class="text-secondary fst-italic">
+            <i class="bi bi-info-circle me-1"></i> Klik op de secties hierboven om details toe te voegen.
+        </small>
+    </div>
+</form>

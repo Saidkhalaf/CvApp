@@ -1,0 +1,17 @@
+@model cvapp.ui.web.mvc.Models.Cv.PersonalInfoViewModel
+@{
+    var route = ViewData["Route"] as string ?? string.Empty;
+    var label = ViewData["Label"] as string ?? "Sectie";
+}
+
+<section id="@route" class="mb-4">
+    <div class="card border-0 shadow-sm opacity-75">
+        <div class="card-body p-4 p-lg-5 text-center">
+            <i class="bi bi-cone-striped display-4 text-warning mb-3"></i>
+            <h4 class="mb-2">@label</h4>
+            <p class="text-muted mb-0">Deze sectie wordt binnenkort beschikbaar gesteld.</p>
+        </div>
+    </div>
+</section>
+
+
